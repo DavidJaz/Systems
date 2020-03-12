@@ -1,0 +1,841 @@
+\section{Introduction}
+
+
+\section{Generalized Lenses}
+
+In this section, we will recall Spivak's definition of a \emph{generalized lens}.
+
+The basic ingredient in the definition of a generalized lens will be a category
+$\Ca$ of \emph{contexts}, and for each context $C \in \Ca$, a category $\Aa(C)$
+of \emph{actions} available in the context $C$. The category of actions must
+vary with the context contravariantly: if $f : C' \to C$ is any change of
+context, we must have a \emph{pullback} functor $\Aa(f) : \Aa(C) \to \Aa(C')$
+that recontextualizes actions along $f$.
+
+Such a contravariant (pseduo-)functor $\Aa : \Ca\op \to \Cat$ is called an
+\emph{indexed category}, indexed by the category $\Ca$.
+
+\begin{defn}
+Let $\Aa : \Ca\op \to \textbf{Cat}$ be an indexed category
+assigning each \emph{context} $C \in \Ca$ to its category of \emph{actions}
+$\Aa(C)$.
+
+The category $\textbf{Lens}_{\Aa}$ of $\Aa$-lenses has:
+\begin{itemize}
+\item Objects pairs $\lens{A}{C}$ of a context $C \in \Ca$ and an action $A \in
+  \Aa(C)$ in the context of $C$.
+\item Morphisms (called \emph{lenses}) $\lens{f^{\sharp}}{f} : \lens{A}{C} \to
+  \lens{A'}{C'}$ are pairs consisting of a recontexualization $f : C \to C'$ and
+  a morphism $f^{\sharp} : \Aa(f)(A') \to A$ of actions.
+\end{itemize}
+Composition of $\lens{f^{\sharp}}{f} : \lens{A}{C} \to \lens{A'}{C'}$ with
+$\lens{g^{\sharp}}{g} : \lens{A'}{C'} \to \lens{A''}{C''}$ is given by
+$$\lens{g^{\sharp}}{g} \circ \lens{f^{\sharp}}{f} :\equiv \lens{f^{\sharp} \circ
+\Aa(f)(g^{\sharp})}{g \circ f}.$$
+\end{defn}
+
+Suppose furthermore that $\Aa: \Ca\op \to \Cat$ is a \emph{monoidal} indexed
+category -- a weak monoid in the 2-category of indexed categories. This means
+that $\Ca$ is a monoidal category with tensor $\otimes$ and
+unit $\One$, and that $\Aa : \Ca\op \to \Ca$ is a lax monoidal functor, meaning
+that it is equipped with functors
+$$- \boxtimes - : \Aa(C) \times \Aa(C') \to \Aa(C \otimes C') \quad\quad
+\One_{\boxtimes} : \ast \to \Aa(\One)$$
+which are natural in $C$ and $C'$ and satisfy the evident laws. Then by the work
+of [christina], the Grothendieck construction of a monoidal indexed category
+admits a canonical monoidal structure.
+
+\begin{defn}
+Let $\Aa : \Ca\op \to \Cat$ be a monoidal indexed category. Then the category
+$\textbf{Lens}_{\Aa}$ of $\Aa$-lenses admits a monoidal structure given by
+$$\lens{A}{O} \otimes \lens{A'}{O'} = \lens{A \boxtimes A'}{O \otimes O'}$$
+and similarly for lenses.
+\end{defn}
+
+
+Let's see a number of examples of this definition.
+\subsection{Example: Lenses in a Cartesian Category}
+Let $\Ca$ be a cartesian category --- every pair of objects $A$ and $B$ admits a
+cartesian product $A \times B$, and there is a terminal object $\ast \in \Ca$.
+Every object $C \in \Ca$ is therefore a comonoid with
+$$\varepsilon : C \to \ast \quad\quad\quad\quad \delta : C \to C \times C$$
+given by the terminal morphism $\varepsilon$ and diagonal morphism $\delta$. The
+functor $X \mapsto C \times X : \Ca \to \Ca$ therefore inherits the natural
+structure of a comonoid under composition: it is a comonad with
+$$\varepsilon_C : C \times X \to X \quad\quad\quad\quad \delta_C : C \times X \to C
+\times C \times X$$
+counit $\varepsilon_C := \pi_2$ the second projection and comultiplication
+$\delta_C := \delta \times X$ given by the diagonal in the left component. We
+recall the definition of the \emph{CoKleisli category} $\textbf{CoKleisli}(C
+\times -)$ for this comonad.
+\begin{defn}
+The \emph{CoKleisli category} $\textbf{CoKleisli}(C \times -)$ for the comonad
+$C \times -$ has:
+\begin{itemize}
+\item Objects the objects of $\Ca$.
+  \item Morphisms $f : X \to Y$ in $\textbf{CoKleisli}(C \times -)$ are maps $f : C \times X \to Y$ in $\Ca$.
+\end{itemize}
+
+CoKleisli composition of $f : C
+\times X \to Y$ with $g : C \times Y \to Z$ is given by
+$$C \times X \xto{\delta_C} C \times C \times X \xto{C \times f} C \times Y
+\xto{g} Z$$
+or $g \circ f :\equiv g \circ (C \times f) \circ \delta_C$. The identity is the
+second projection $\varepsilon_C : C \times X \to X$.
+\end{defn}
+[something about cokleisli maps being maps in the context of $C$]
+
+Given any function $f : C \to C'$, we get a functor $\textbf{CoKleisli}(f \times
+-) : \textbf{CoKleisli}(C' \times -) \to \textbf{CoKleisli}(C \times -)$ sending
+$X$ to $X$ and sending $g : C' \times X \to Y$ to
+$$C \times X \xto{f \times X} C'\times X \xto{g} Y$$
+or $g \circ (f \times X)$. This gives us a contravariant functor
+$$\textbf{CoKleisli}(+ \times -) : \Ca^{op} \to \Cat$$
+sending each $C \in \Ca$ to the CoKleisli category $\textbf{CoKleisli}(C \times -)$.
+
+\begin{defn}
+A \emph{lens} in the cartesian category $\Ca$ is a $\textbf{CoKleisli}(+ \times
+-)$-lens. The category $\textbf{Lens}_{\Ca}$ of lenses in $\Ca$ therefore has:
+\begin{itemize}
+\item Objects pairs $\lens{A}{C}$ with $C \in \Ca$ and $A \in
+  \textbf{CoKleisli}(C \times -)$ (and therefore also an object of $\Ca$).
+\item Morphisms \emph{lenses} $\lens{f^{\sharp}}{f} : \lens{A}{C} \to
+  \lens{A'}{C'}$ with $f : C \to C'$ and $f^{\sharp} : C \times A' \to
+  A$.
+\end{itemize}
+
+Composition of lenses is given by the formula
+$$(g \circ f)^{\sharp}(c, a'') :\equiv f^{\sharp}(c, g^{\sharp}(f(c), a'')).$$
+\end{defn}
+
+Now, $\Ca$ is a monoidal category with tensor $\times$ and
+unit $\ast$. Furthermore, we may define
+$$- \boxtimes - : \textbf{CoKleisli}(C \times -) \to \textbf{CoKleisli}(C'
+\times -) \to \textbf{CoKleisli}((C \times C') \times -)$$
+by $A \boxtimes B = A \times B$ and with $f \boxtimes g$ being
+$$(C \times C') \times (A \times B) \xto{\sim} (C \times A) \times (C' \times B)
+\xto{f \times g} A' \times B'$$
+with $f : C \times A \to A'$ and $g : C' \times B \to B'$.
+
+This gives a monoidal struction on $\textbf{Lens}_{\Ca}$, where
+$$\lens{A}{O} \otimes \lens{A'}{O'} = \lens{A \times A'}{O \times O'}$$
+and
+$$\lens{f^{\sharp}}{f} \otimes \lens{g^{\sharp}}{g} = \lens{f \boxtimes g}{f \times g}.$$
+
+\subsection{Example: Prisms and Wiring Diagrams}
+
+A \emph{wiring diagram} is a way of wiring together a bunch of \emph{boxes} into
+a larger box:
+
+[picture]
+
+Wiring diagrams may be composed by filling in the boxes and erasing their
+boundaries:
+
+[picture]
+
+A \emph{box} has a set of input wires (drawn on the left) and output wires
+(drawn on the right):
+
+[picture]
+
+We can place boxes together by taking the disjoint union of their input and
+output wires respectively.
+
+A wiring diagram of a set of inner boxes into an outer box follows these simple rules:
+\begin{itemize}
+\item Every output of the outer box is wired to exactly one output of the inner
+  boxes.
+  \item Every input of the inner boxes is wired either to an input of the outer
+    box, or an output of an inner box.
+\end{itemize}
+
+If we write $\lens{I_{\text{in}}}{O_{\text{in}}}$ for inner boxes with input set
+$I_{\text{in}}$ and output set $O_{\text{in}}$ and
+$\lens{I_{\text{out}}}{O_{\text{out}}}$ for the outer box, then the rules for a
+wiring diagram give us a pair of functions:
+\begin{itemize}
+\item An assignment $f : O_{\text{out}} \to O_{\text{in}}$ assigning each outer
+  output to an inner output.
+\item An assignment $f^{\sharp} : I_{\text{in}} \to O_{\text{in}} +
+  I_{\text{out}}$ assigning each inner input either to an inner output or an
+  outer input.
+\end{itemize}
+
+This is dual to the notion of a lens.
+
+A \emph{prism} is the categorical dual of a lens. If $\Ca$ is a cocartesian
+category, having all finite coproducts, then every object $C \in \Ca$ is a
+monoid with regards to the coproduct:
+$$\eta : \emptyset \to C \quad\quad\quad\quad \mu : C + C \to C$$
+are the initial morphism and the codiagonal respectively. This means that the
+functor $X \mapsto C + X$ is a monad and we can form its Kleisli category
+$\textbf{Kleisli}(C + -)$. This gives us a \emph{covariant} functor
+$\textbf{Kleisli}((-) + (-))\op : \Ca \to \Ca$ sending each $C$ to the
+\emph{opposite} of its Kleisli category, which we will interpret as a
+\emph{contravariant} functor on $\Ca\op$. 
+
+\begin{defn}
+A \emph{prism} in a cocartesian category $\Ca$ is a lens in $\Ca\op$. As a
+generalized lens, it is a $\textbf{Kliesli}((-) + (-))\op$-lens.
+
+A \emph{wiring diagram} is a prism in the category of finite sets.
+\end{defn}
+
+\subsection{Example: $M$-Lenses for a Strong Monad}
+
+Let $\Ca$ be a cartesian category. A \emph{strong monad} $M : \Ca \to \Ca$ is a
+monad equipped with a \emph{strength} $\sigma : C \times MX \to M(C \times X)$,
+natural in $C$ and $X$ and satisfying a few natural laws (see [somewhere]):
+
+  Every monad on the category of sets is strong, as is every monad in Haskell.
+  The strength can be written in Haskell as:
+\begin{verbatim}
+strength :: Monad m => c -> m x -> m (c, x)
+strength c mx = do
+  x <- mx
+  return (c, x)
+\end{verbatim}
+
+  Despite this simple definition, the strength is a useful concept for a number
+  of monads. For example, if $M : \Set \to \Set$ is the \emph{probability
+    distribution monad} sending a set $X$ to the set of (finitely supported)
+  probability distributions on it, then the strength $\sigma : C \times MX \to
+  M(C \times X)$ sends $(c, p)$ to the distribution $\delta_c p$ which assigns
+  probability $p_x$ to $(c', x)$ if $c' = c$ and $0$ otherwise.
+  
+  There is another way to describe a strong monad on a cartesian category.
+\begin{prop}
+Let $M : \Ca \to \Ca$ be a monad on a cartesian category $\Ca$. The data of a
+strength for $M$ is equivalent to the data of a natural assignment of a
+distributive law $\sigma : (C \times -) \circ M \to M \circ (C \times -)$ of the
+comonad $C \times -$ over $M$ to every object $C \in \Ca$.
+\end{prop}
+
+  Therefore, we can define a \emph{BiKleisli} category $\textbf{BiKleisli}(C
+  \times -, M)$ as follows:
+\begin{defn}
+Let $M : \Ca \to \Ca$ be a strong monad on a cartesian category $\Ca$ and let $C
+\in \Ca$. Then the \emph{BiKleisli} category $\textbf{BiKleisli}(C \times -, M)$
+has:
+\begin{itemize}
+\item Objects the objects of $\Ca$.
+\item Morphisms $X \to Y$ are maps $C \times X \to MY$ in $\Ca$.
+\end{itemize}
+Composition of $f : C \times X \to MY$ with $g : C \times Y \to MZ$ is given by
+$$C \times X \xto{\delta_C} C \times C \times X \xto{C \times f} C \times MY
+\xto{\sigma} M(C \times Y) \xto{M(g)} MMZ \xto{\mu} MZ,$$
+or $g \circ f :\equiv \mu \circ M(g) \circ \sigma \circ C \times f \circ \delta_C$.
+\end{defn}
+
+\begin{defn}
+Let $M : \Ca \to \Ca$ be a strong monad on a cartesian category. An
+\emph{$M$-lens} is a lens for the functor $\textbf{BiKleisli}((-) \times (-), M)
+: \Ca\op \to \Ca$.
+\end{defn}
+[this corresponds to the notion of monadic lens from ``reflections on monadic
+lenses'' by abou-saleh cheney gibbons mckinna and stevens]
+
+We can define the $M$-lens composite $\lens{g^{\sharp}}{g} \circ \lens{f^{\sharp}}{f}$ in Haskell as:
+\begin{verbatim}
+lensComposite :: Monad m => (c  -> c')
+                         -> (c' -> c'')
+                         -> ((c, a') -> m a) 
+                         -> ((c', a'') -> m a') 
+                         -> (c, a'') -> m a
+lensComposite f g f# g# c' a'' = do
+  a' <- g# (f c, a'')
+  f# (c, a')
+\end{verbatim}
+
+Given a strength $\sigma : C \times MX \to M(C \times X)$, we can define a
+``mix'' morphism $m : MX \times M Y \to M(X \times Y)$ to be the composite
+$$MX \times MY \xto{\sigma} M(X \times MY) \xto{\sim} M(MY \times X)
+\xto{M\sigma} MM(X \times Y) \xto{\mu} M(X \times Y).$$
+
+Such a morphism is an equivalent way to define a strong monad. The mix function
+may be defined in Haskell as:
+\begin{verbatim}
+mix :: Monad m => m x -> m y -> m (x, y)
+mix mx my = do
+  x <- mx
+  y <- my
+  return (x, y)
+\end{verbatim}
+For the probability monad, the mix function sends a probability distribution $p$
+on $X$ and a probability distribution $q$ on $Y$ to their joint distribution
+$pq$ on $X \times Y$. For the list monad, the mix function zips together two
+lists. 
+
+Using the mix morphism $m : MX \times MY \to M(X \times Y)$, we can give the
+structure of a monoidal indexed category on $\textbf{BiKleisli}((-) \times (-),
+M)$. Define $A \boxtimes B$ to be $A \times B$ and $f \boxtimes g$ to be the
+composite
+$$(C \times C') \times (A \times B) \xto{\sim} (C \times A) \times (C' \times B)
+\xto{f \times g} M A' \times M B' \xto{m} M(A' \times B'),$$
+where $f : C \times A \to M A'$ and $g : C' \times B \to M B'$. 
+
+
+\subsection{Example: Dependent Lenses in a Category with Display Maps}
+
+\begin{defn}
+A \emph{category with display maps} is a category $\Ca$ with a class $D$ of its
+morphisms such that for any $d : X \to Y$ in $D$ and $f : Z \to Y$, the pullback
+$f^{\ast}d : Z \times_Y Y$ exists and is in $D$.
+\end{defn}
+
+\begin{ex}
+Let $\textbf{Mfd}$ denote the category of smooth manifolds and smooth functions.
+Then the class $\textbf{Subm}$ of submersions is a class of display maps.
+\end{ex}
+
+\begin{defn}
+A \emph{dependent lens} in a category $(\Ca, D)$ with display maps is a $(\Ca
+\downarrow_{D} -)$-lens, where $\Ca \downarrow_D - : \Ca^{\op} \to \textbf{Cat}$ sends $C
+\in \Ca$ to the full subcategory of the slice category $\Ca \downarrow -$
+spanned by the maps in $D$.
+\end{defn}
+
+\begin{rmk}
+The motiviation for the name ``dependent lens'' comes from dependent type
+theory. A display map $f : A \to B$ can be through of as a typing judgement $b : B
+\vdash A_b : \Type$. With this interpretation, a dependent lens $\lens{A}{C} \to
+\lens{A'}{C'}$ consists of a function $f : C \to C'$ and a dependent function 
+$$f^{\sharp} : \dprod{c : C} A'_{f(c)} \to A_c.$$
+
+\end{rmk}
+
+If we further ask that the product $f \times g$ of two display maps $f,\, g \in
+D$ is also a display map, then $(f, g) \mapsto f \times g$ gives a monoidal
+structure on the indexed category $\Ca \downarrow_D -$. Since the product of
+submersions is a submersion, this works for our example above.
+\subsection{Generalized Lens Categories via the Grothendieck Construction}
+
+To those who have seen the Grothendieck construction before, the above
+definition of generalized lens categories must feel familiar, if a bit off. In
+fact, the category of generlized lenses $\textbf{Lens}_{\Aa}$ \emph{is} a
+Grothendieck construction, but applied to $\Aa$'s pointwise opposite $\Aa\op$.
+\begin{prop}
+Let $\Aa : \Ca\op \to \textbf{Cat}$ be a contravariant (pseudo-)functor. Let
+$\Aa\op : \Ca\op \to \textbf{Cat}$ denote the composite $\Ca\op \xto{\Aa}
+\textbf{Cat} \xto{(-)\op} \textbf{Cat}$, the pointwise opposite. Then
+$$\textbf{Lens}_{\Aa} = \int_{C : \Ca} \Aa(C)\op$$
+where $\int_{C : \Ca} \Aa(C)\op$ is the (contravariant) Grothendieck construction applied to
+$\Aa\op$.
+\end{prop}
+
+As a corollary, we can import a few results from the theory of Grothendieck
+fibrations.
+\begin{thm}{Recognition of Limits in Lens Categories}\label{thm:limits.in.lens.cats}
+Let $D : J \to \textbf{Lens}_{\Aa}$ be a diagram in a generalized lens category.
+If $U \circ D : J \to \Ca$ admits a limit $L$ and the pulled back diagram
+$D^{\ast} : J \to \Aa(L)$ admits a colimit $A$, then $\lens{A}{L}$ is the limit
+of $D$ in $\textbf{Lens}_{\Aa}$.
+\end{thm}
+\begin{proof}
+
+\end{proof}
+
+\begin{cor}
+Suppose that $\Ca$ has $J$-indexed limits and that for each $C \in \Ca$,
+$\Aa(C)$ has $J$-indexed colimits and $\Aa(f)$ preserves them for $f : C \to
+C'$. Then $\textbf{Lens}_{\Aa}$ has $J$-shaped limits and the forgetful functor
+$\textbf{Lens}_{\Aa} \to \Ca$ preserves them.
+\end{cor}
+\begin{proof}
+
+\end{proof}
+
+As a corollary, we find that pullbacks of lenses can be constructed in $\Ca$.
+\begin{cor}
+Let \[J = \begin{tikzcd} & \bullet \arrow[d] \\ \bullet \arrow[r] &
+  \bullet \end{tikzcd}\]
+so that a limit of a diagram $D : J \to \textbf{Lens}_{\Aa}$ is a pullback. Such
+a diagram admits a limit if and only if the underlying diagram $U \circ D : J
+\to \Ca$ admits a limit. 
+\end{cor}
+\begin{proof}
+Note that since $J$ has a terminal object, every category has $J$-shaped colimits and every functor
+preserves them (the colimit is just the tip of the cospan). Therefore, the
+conditions of Theorem \ref{thm:limits.in.lens.cats} are satisfied.
+\end{proof}
+
+\subsection{Functoriality of the Generlized Lens Construction}
+
+Since the generalized lens construction is just an instance of the Grothendieck
+construction, we get its functoriality for free.
+
+\begin{prop}
+  Let $(F, \phi) : \Aa \to \Ba$ be a functor of indexed categories. That is,
+  \[
+    \begin{tikzcd}
+      \Ca \arrow[rd,"\Aa"{name=U} ] \arrow[dd,"F"']& \\
+      & \textbf{Cat} \\
+      \Da \arrow[Rightarrow,
+      from=U, shorten <= 1em, shorten >= 1em, "\phi"] \arrow[ur, "\Ba"'] 
+    \end{tikzcd}
+  \]
+  $F : \Ca \to \Da$ is a functor and $\phi : \Aa \to \Ba \circ F$ is a natural
+  transformation. Then we have an induced functor
+  $$(F, \phi)_{\ast} : \textbf{Lens}_{\Aa} \to \textbf{Lens}_{\Ba}$$
+  given by sending $\lens{A}{C}$ to $\lens{\phi A}{F C}$ and
+  $\lens{f^{\sharp}}{f}$ to $\lens{\phi f^{\sharp}}{F f}$.
+
+  If $\Aa$ and $\Ba$ are monoidal indexed categories and $(F, \phi)$ is a lax
+  monoidal indexed functor (see [christina]), then the induced functor $(F,
+  \phi)_{\ast}$ will also be lax monoidal.
+\end{prop}
+
+\begin{ex}
+Suppose that $\alpha : M \to N$ is a strong monad morphism between strong monads $M$
+and $N$. This means that, in addition to $\alpha$ being a monad morphism, the
+following diagram commutes:
+\[
+  \begin{tikzcd}
+    C \times M X \arrow[r,"\sigma_M"] \arrow[d, "C \times \alpha"'] & M(C \times X) \arrow[d,"\alpha"] \\
+    C \times N X \arrow[r,"\sigma_N"'] & N(C \times X)
+  \end{tikzcd}
+\]
+
+Then we get an indexed
+functor $(\id, \alpha) : \textbf{BiKleisli}((-) \times (-), M) \to
+\textbf{BiKleisli}((-) \times (-), N)$ given by sending $f : C \times X \to M Y$
+to $\alpha_Y \circ f : C \times X \to N Y$.
+
+This induces a functor $\textbf{Lens}_{M} \to \textbf{Lens}_{N}$ which sends an
+$M$-lens $\lens{f^{\sharp}}{f}$ to the $N$-lens $\lens{\alpha \circ f^{\sharp}}{f}$.
+
+Of particular importance is the unique monad morphism $\eta : \id \to M$ given
+by the unit of the monad $M$. That this monad morphism is strong is one of the
+axioms of a strength for a monad. This means that we have a functor
+$$\textbf{Lens}_{\Ca} \to \textbf{Lens}_M$$
+for any strong monad $M$ on $\Ca$, lifting any lens into an $M$-lens.
+\end{ex}
+
+
+\begin{ex}
+Suppose that $\Ca$ is a cartesian category. Let $\textbf{Fin} \downarrow \Ca$ be
+the category of $\Ca$-labeled finite sets. 
+
+There is a contravariant functor $\prod : \textbf{Fin} \downarrow \Ca \to
+\Ca\op$ taking a $\Ca$-labeled finite set $\ell : X \to \Ca$ to the product
+$\prod_{x \in X} \ell_x$.
+
+The functor $\prod$ sends coproducts to products, so given a $\Ca$-labeled finite set $\ell : X \to \Ca$, we get a functor
+$\prod : \textbf{Kleisli}(\ell + -)\op \to \textbf{CoKleisli}(\prod \ell \times
+-)$. This gives us a functor of indexed categories.
+
+Finally, by the functoriality of the generalized lens construction, we get a
+functor
+$$\textbf{WD}_{\Ca} \to \textbf{Lens}_{\Ca}$$
+interpreting any wiring diagram as a lens.
+\end{ex}
+
+\section{Sections}
+
+\begin{defn}
+Let $\Aa : \Ca\op \to \textbf{Cat}$. A \emph{section} $\varepsilon$ of $\Aa$ is an
+assignment of an object $\varepsilon C \in \Aa(C)$ to each $C \in \Ca$ and
+$\varepsilon_f : \varepsilon C \to \Aa(f)(C')$ for each $f : C \to C'$ such that
+\begin{itemize}
+\item $\varepsilon_{\id} = \id$.
+\item $\varepsilon_{g \circ f} = \Aa(g)(\varepsilon_f) \circ \varepsilon_g$.
+\end{itemize}
+
+If $\Aa$ is a monoidal indexed category, then we say that $\varepsilon$ is a
+\emph{monoidal} section if it is equipped with a morphism $\zeta : \varepsilon
+\One_{\otimes} \to \One_{\boxtimes}$ and morphisms $\ell : \varepsilon(C \otimes
+C') \to \varepsilon C'
+\boxtimes \varepsilon C'$ which commute with the
+structure maps of $\boxtimes$ and $\otimes$, and which are natural in $C$ and
+$C'$ in the sense that the following diagram commutes: 
+\[
+  \begin{tikzcd}
+   \varepsilon(C \otimes C')  \arrow[r,"\ell" ] \arrow[d, "\varepsilon_{f \otimes g}"] & \varepsilon C \boxtimes \varepsilon C'  \arrow[d,"\varepsilon_f \boxtimes
+    \varepsilon_g"' ]\\
+    \Aa(f \otimes g)( \varepsilon(D \otimes D') ) \arrow[r, "\ell"'] & \Aa(f)( \varepsilon D ) \boxtimes \Aa(g)( \varepsilon D' )
+  \end{tikzcd}
+\]
+
+That is, $\varepsilon$ is a section of the (contravariant) Grothendieck
+construction $\int \Aa \to \Ca$ of $\Aa$.\footnote{Note that this is \emph{not} the
+  category of $\Aa$-lenses, which is the contravariant Grothendieck construction
+of the pointwise opposite $\Aa\op$.}
+ If $\Aa$ is a monoidal, then we ask that
+ $\varepsilon$ be an \emph{oplax} monoidal section.\footnote{In our examples,
+   our sections will be \emph{pseudo}-monoidal, that is, the maps $\zeta$ and $\ell$
+ will be isomorphisms. But we only use the oplax direction abstractly.}
+\end{defn}
+
+\begin{itemize}
+\item Let $\Ca$ be a cartesian category. The $\varepsilon C := C$ and $\varepsilon_f
+  := f \circ \pi_2$ gives a section of $\textbf{CoKleisli}((-) \times (-)) :
+  \Ca\op \to \Cat$. This section is monoidal, with both $\zeta : \ast \times \ast \to
+  \ast$ and $\ell : (C \times C') \times (C \times C') \to
+  C \times C'$ defined to be the identity, $\pi_2$.
+\item Similarly, if $M : \Ca \to \Ca$ is a strong monad on a cartesian category,
+  then we can set $\varepsilon C := C$ and $\varepsilon_f := \eta \circ f \circ
+  \pi_2$ to get a section of $\textbf{BiKleisli}((-) \times (-), M)$. This
+  section is also monoidal, with $\zeta$ and $\ell$ both identities $\eta \circ \pi_2$. 
+\item Consider the category $(\textbf{Mfd}, \textbf{Subm})$ of smooth manifolds
+  equipped with submersions as display maps. The tangent bundle functor sending
+  a smooth manifold to the projection $\pi : TC \to C$ of the tangent bundle of
+  $C$ gives a section of $\textbf{Mfd} \downarrow_{\textbf{Subm}} -$ by setting
+  $\varepsilon_f := (\pi, df) : TC \to C \times_C' TC'$. 
+
+  This section is also monoidal, with $\zeta : T\ast \to \ast$ and $\ell : T(C \times C') \to TC \times TC'$
+  the canonical isomorphisms.
+\end{itemize}
+
+\subsection{Aside: Simple and Lawful Lenses}
+
+\begin{defn}
+Let $\varepsilon$ be a section of $\Aa : \Ca\op \to \textbf{Cat}$. A \emph{simple
+  $\Aa$-lens} is a lens of the form
+$\lens{f^{\sharp}}{f} : \lens{\varepsilon C}{C} \to \lens{\varepsilon D}{D}$.
+
+Given a simple lens $\lens{f^{\sharp}}{f}$, consider the following \emph{laws}:
+\begin{itemize}
+  \item $\lens{f^{\sharp}}{f}$ is said to satisfy \emph{getput} if $\varepsilon_f
+    \circ f^{\sharp} = \id_{\Aa(f)(\varepsilon D)}$.
+  \item $\lens{f^{\sharp}}{f}$ is said to satisfy \emph{strong putget} if
+    $f^{\sharp} \circ \varepsilon_f = \id_{\varepsilon C}$.
+\end{itemize}
+\end{defn}
+
+In the category $\textbf{Lens}_{\Ca}$ of lenses in a cartesian category $\Ca$,
+these yield the laws
+$$f(f^{\sharp}(c, d)) = d \quad\text{and}\quad f^{\sharp}(c, f(c')) = c'.$$
+
+These are called the \emph{getput} and \emph{strongputget} laws in (cite lens
+laws paper).
+
+
+\section{Open Dynamical Systems}
+
+\begin{defn}
+Let $\lens{I}{O}$ be an object of $\textbf{Lens}_{\Aa}$ for an indexed category
+$\Aa : \Ca\op \to \Cat$, and that $\varepsilon$ is a section of $\Aa$. An
+\emph{$\lens{I}{O}$-dynamical system} consists of:
+\begin{itemize}
+\item An object $S \in \Ca$ of \emph{states}, and
+  \item A lens $\lens{u}{r} : \lens{\varepsilon S}{S} \to \lens{I}{O}$,
+    consisting of a \emph{readout} $r : S \to O$ and an \emph{update} $u :
+    \Aa(r)(I) \to \varepsilon S$.
+  \end{itemize}
+
+A map $\phi : \lens{u}{r} \to \lens{u'}{r'}$ of $\lens{I}{O}$-dynamical systems
+is a map $\phi : S \to S'$ satisfying the following laws:
+\begin{itemize}
+\item Observational equivalence:
+  \[
+    \begin{tikzcd}[row sep=tiny]
+      S \arrow[dd, "\phi"']  \arrow[dr, "r"] & \\
+      & O \\
+      S' \arrow[ur, "r'"'] &
+    \end{tikzcd}
+  \]
+\item Covariance:
+  \[
+    \begin{tikzcd}
+      \Aa(r)(I) \arrow[r, "u"] \arrow[d, equal] & \varepsilon S \arrow[d, "\varepsilon_{\phi}"] \\
+      \Aa(\phi)(\Aa(r')(I)) \arrow[r, "\Aa(\phi)(u')"'] & \Aa(\phi)(\varepsilon S')
+    \end{tikzcd}
+  \]
+\end{itemize}
+We will denote by $\textbf{Dyn}_{\lens{I}{O}}$ the category of
+$\lens{I}{O}$-dynamical systems. 
+\end{defn}
+
+We can see that the composite $\psi \circ \phi$ in $\textbf{Dyn}_{\lens{I}{O}}$ is well defined by
+considering the following diagram
+\[
+  \begin{tikzcd}
+      \Aa(r)(I) \arrow[r, "u"] \arrow[d, equal] & \varepsilon S \arrow[d,
+      "\varepsilon_{\phi}"] \arrow[dd, bend left = 60, "\varepsilon_{\psi \circ \phi}"] \\
+      \Aa(\phi)(\Aa(r')(I)) \arrow[r, "\Aa(\phi)(u')"] \arrow[d, equal] & \Aa(\phi)(\varepsilon
+      S') \arrow[d, "\Aa(\phi)(\varepsilon_{\psi})"']\\
+      \Aa(\phi)(\Aa(\psi)(r'')(I)) \arrow[r,"\Aa(\phi)(\Aa(\psi)(u''))"' ] &
+      \Aa(\phi)(\Aa(\psi)(\varepsilon S''))
+  \end{tikzcd}
+\]
+and recalling that $\Aa(\psi \circ \phi) = \Aa(\phi)\circ \Aa(\psi)$.
+
+Post-composing by a lens $\lens{f^{\sharp}}{f} : \lens{I}{O} \to \lens{I'}{O'}$
+gives a functor $\textbf{Dyn}_{\lens{I}{O}} \to \textbf{Dyn}_{\lens{I'}{O'}}$.
+This gives us a \emph{covariant} functor
+$$\textbf{Dyn}_{(-)} : \textbf{Lens}_{\Aa} \to \Cat.$$
+We define the category $\textbf{Dyn}_{(\Aa, \varepsilon)}$ to be the
+\emph{covariant} Grothendieck construction of $\textbf{Dyn}_{(-)}$.
+
+Explicitly, a $(\Aa,\varepsilon)$-\emph{dynamical system} consists of:
+\begin{itemize}
+\item A context $S \in \Ca$ of \emph{states}.
+\item A context $O \in \Ca$ of \emph{outputs}.
+\item A type of actions $I \in \Aa(O)$ of \emph{inputs}, contextualized by the
+  outputs.
+\item An $\Aa$-lens $\lens{u}{r} : \lens{\varepsilon S}{S} \to \lens{I}{O}$
+  consisting of a \emph{readout} $r : S \to O$ and an \emph{update} $u :
+  \Aa(r)(I) \to \varepsilon S$.
+\end{itemize}
+
+A \emph{map} $\lens{u}{r} \to \lens{u'}{r'}$ of dynamical systems is a pair $\left(\phi, \lens{f^{\sharp}}{f}\right)$
+consisting of a map $\phi : S \to S'$ and a lens $\lens{f^{\sharp}}{f} :
+\lens{I}{O} \to \lens{I'}{O'}$ such that the following diagrams commute:
+\[
+\begin{tikzcd}
+S \arrow[r,"r" ] \arrow[d,"\phi"' ]& O \arrow[d,"f" ]\\
+S' \arrow[r,"r'"' ] & O'
+\end{tikzcd}
+\quad\quad
+\begin{tikzcd}
+  \Aa(r)(\Aa(f)(I')) \arrow[r,"\Aa(r)(f^{\sharp})"] \arrow[d, equal] &\Aa(r)(I) \arrow[r, "u"] &\varepsilon S \arrow[d, "\varepsilon_{\phi}"]
+  \\
+  \Aa(\phi)(\Aa(r')(I')) \arrow[rr,"\Aa(\phi)(u')"'] & &\Aa(\phi)(\varepsilon S') \\
+\end{tikzcd}
+\]
+
+If $\Aa : \Ca\op \to \Cat$ is a monoidal indexed category, then
+$\textbf{Dyn}_{(-)}$ is also monoidal with $- \boxtimes - :
+\textbf{Dyn}_{\lens{I}{O}} \times \textbf{Dyn}_{\lens{I'}{O'}} \to
+\textbf{Dyn}_{\lens{I}{O} \otimes \lens{I'}{O'}}$ given by
+$$\lens{u}{r} \boxtimes \lens{u'}{r'} := \lens{(u \boxtimes u') \circ \ell}{r
+  \otimes r'}$$
+and $\One_{\boxtimes} := \lens{\zeta}{\id_{\One_{\otimes}}}$.
+
+\subsection{Example: Open Discrete Dynamical Systems}
+
+For $\Aa(C) = \textbf{CoKleisli}(C \times -)$ and $\varepsilon$ as in Example
+[cite], an $(\Aa, \varepsilon)$ dynamical system is as follows:
+
+\begin{defn}
+  An open discrete dynamical system in the category of sets consists of:
+  \begin{itemize}
+    \item A set $S$ of \emph{states}, a set $O$ of \emph{outputs}, and a set $I$
+      of \emph{inputs}.
+    \item A readout function $r : S \to O$ and an update function $u : S \times
+      I \to S$.
+  \end{itemize}
+  A morphism $\left( \phi, \lens{f^{\sharp}}{f} \right) : \left( S, \lens{I}{O},
+  \lens{u}{r} \right) \to \left( S', \lens{I'}{O'}, \lens{u'}{r'} \right)$
+consists of a function $\phi : S \to S'$ and a lens $\lens{f^{\sharp}}{f} :
+\lens{I}{O} \to \lens{I'}{O'}$ satisfying the following two laws:
+\begin{itemize}
+\item (Observational equivalence) $r'(\phi(s)) = f(r(s))$ for all $s \in S$.
+\item (Covariance) $u'(\phi(s), j) = \phi(u(s, f^{\sharp}(r(s), j)))$ for all $s
+  \in S$ and $j \in I'$.
+\end{itemize} 
+\end{defn}
+
+If $\lens{f^{\sharp}}{f} : \lens{I}{O} \to \lens{I'}{O'}$ is a lens
+and $\lens{u}{r} : \lens{S}{S} \to \lens{I}{O}$ is a discrete dynamical system,
+then we get a new dynamical system $\lens{u'}{r'} := \lens{f^{\sharp}}{f} \circ
+\lens{u}{r}$. In full:
+\begin{align*}
+u'(s, j) &:= u(s, f^{\sharp}(r(s), j)), \\
+r'(s) &:= f(r(s)).
+\end{align*}
+Then $\left( \id, \lens{f^{\sharp}}{f} \right)$ becomes a morphism from
+$\lens{u}{r}$ to $\lens{u'}{r'}$. 
+
+
+An open discrete dynamical system gives a stream transformation from inputs to
+outputs by running the system on a stream of inputs. Given a state
+$s \in S$ and a stream of inputs $i \in I^{\omega}$, we get a stream of outputs
+$\lens{u}{r}_{\ast}(s, i) \in O^{\omega}$ defined by
+\begin{align*}
+  \text{head } \lens{u}{r}_{\ast}(s, i) &:= r(s) \\
+  \text{tail } \lens{u}{r}_{\ast}(s, i) &:= \lens{u}{r}_{\ast}(u(s, \text{head }i), \text{tail } i)
+\end{align*}
+or, less formally
+$$(r(s), r(u(s, i_0)), r(u(u(s, i_0), i_1)), \ldots)$$
+
+\subsection{Example: Open Markov Systems}
+
+Let $\Ca$ be the category of sets and let $D$ be the probability monad on $\Ca$,
+sending each set to the set of (finitely supported) probability distributions on
+it. The Kleisli category for $D$ is the category $\textbf{Stoch}$ of
+\emph{stochastic maps}; a map in the Kleisli category $f : X \to DY$ send each
+$x$ in $X$ to a \emph{probability distribution} $f(x)$ on $Y$, which we could
+interpret as the probability that $x$ is mapped to a given element of $Y$.
+
+A Markov system is a stochastic map $u : S \to DS$ giving for each state $s$ a
+probability distribution $u(s)$ on states. We interpret the probability
+$u(s)(t)$ as the likelihood that state $s$ will transition to state $t$. Often
+these numbers $u(s)(t)$ are arranged in a matrix and one calculates the
+interated transition probabilities $u^{\circ n}$ by multiplying this matrix.
+This can be seen formally from the (strong) monad morphism $i : D \to \Rb \otimes -$
+from $D$ to the $\Rb$-linear monad $\Rb \otimes -$ that sends a set $X$ to the
+free $\Rb$-vector space $\Rb \otimes X$ generated by it. This monad morphism
+interprets every probability distribution $p$ on a set $X$ as a formal $\Rb$-linear
+combination of elements of $X$.
+
+
+The BiKleisli category $\textbf{BiKleisli}(C \times -, D)$ therefore consists of
+\emph{contextualized stochastic maps}, or functions $f : C \times X \to D Y$
+consisting of a stochastic map $f_c : X \to DY$ for every context $c \in C$.
+\begin{defn}
+An \emph{open Markov system} is a $\textbf{BiKleisli}(((-) \times (-),
+D))$-dynamical system. An open Markov system consists of:
+\begin{itemize}
+\item A set $S$ of states, a set $O$ of outputs, and a set $I$ of inputs, and
+\item A readout function $r : S \to O$, and an stochastic update function $S
+  \times I \to D S$.
+\end{itemize}
+\end{defn}
+
+We can see a morphism of open Markov systems as a \emph{hierarchical planner}.
+Suppose we have a function $\alpha  : S \times A \to D S$ that takes a state $s \in S$
+and an action $a \in A$ yields a distribution of expected new states $\alpha(s,
+a) \in DS$. Then we have an
+open markov system $\lens{\alpha}{\id} : \lens{S}{S} \to \lens{A}{S}$. Given
+another such system $\lens{\alpha'}{\id} : \lens{S'}{S'} \to \lens{A'}{S'}$
+which we will think of as operating at a higher scale, a
+map of open Markov systems $(g, \lens{p}{g}) : \lens{\alpha}{\id} \to
+\lens{\alpha'}{\id}$ consists of a lens $\lens{p}{g} : \lens{A}{S} \to
+\lens{A'}{S'}$ (observational equivalence forces that the map $S \to S'$ is
+$g$). We think of this as consisting of:
+\begin{itemize}
+\item A coarse graining $g : S \to S'$ saying how each low level state
+  corresponds to a high level state.
+  \item A planner $p : S \times A' \to D A$ saying which low level action one
+    expects to take given a low level state and a high level action.  
+  \end{itemize}
+  Where the following diagram must commute:
+
+  \[
+      \begin{tikzcd}
+S \times A' \arrow[r, "\Delta \times A'"] \arrow[d, "g \times A'"'] & S^3 \times A' \arrow[r, "S^2 \times p"]  & S^2 \times DA \arrow[d, "S \times \sigma"]      \\
+S' \times A' \arrow[d, "u'"']                                       &                                          & S \times D(S \times A) \arrow[d, "S \times Du"] \\
+D S'                                                                & S \times D S \arrow[l, "Dg \circ \pi_1"] & S\times DD(S) \arrow[l, "S \times \mu"]        
+\end{tikzcd}
+  \]
+
+We interpret this as saying that if one begins with a low level state and high
+level action and seeks the resulting high level state that one gets from acting
+on the (coarse graining of) that state and action, it suffices to plan and execute a low level action and then coarse grain the
+resulting low level state.
+
+\subsection{$M$-dynamical systems as Automata via Coalgebras for Endofunctors}
+
+Suppose that $\Ca$ is a cartesian closed category and that $M$ is a strong monad
+on it. Then the data
+$$\lens{u}{r} : \lens{S}{S} \to \lens{I}{O}$$
+of an $M$-dynamical system in $\Ca$ can be summarized in the single morphism
+$$(r, \hat{u}) : S \to O \times MS^I$$
+where $\hat{u} : S \to MS^I$ is the transpose of $u : S \times I \to MS$. This
+is an example of a \emph{coalgebra} for the endofunctor $X \mapsto O \times
+MX^I$ of $\Ca$.
+
+We recall the definition of coalgebras for endofunctors now.
+\begin{defn}
+Let $F : \Ca \to \Ca$ be an endofunctor of a category $\Ca$. A \emph{coalgebra}
+for $F$ is a morphism $\alpha : S \to FS$. A \emph{homomorphism} $f : \alpha \to
+\beta$ of coalgebras is a map $f : S \to S'$ so that the following square
+commutes:
+\[
+\begin{tikzcd}
+S \arrow[d,"f"'] \arrow[r,"\alpha" ] & FS \arrow[d,"Ff" ] \\
+S' \arrow[r,"\beta"'] & FS'
+\end{tikzcd}
+\]
+
+We denote the category of coalgebras of $F$ by $\textbf{Coalg}_F$. Given a
+natural transformation $\phi : F \to G$, we get a functor $\textbf{Coalg}_\phi :
+\textbf{Coalg}_{F} \to \textbf{Coalg}_G$ sending $S \xto{\alpha} FS$ to the
+composite $S \xto{\alpha} FS \xto{\phi_S} GS$. This gives a functor
+$$\textbf{Coalg} : \textbf{End}(\Ca) \to \Cat.$$
+\end{defn}
+
+For a strong monad $M$, a coalgebra for the endofunctor $X \mapsto O \times
+MX^I$ is a \emph{$M$-automata}. For example, if $\Ca$ is the category of sets
+and $O = \{\text{accept}, \text{reject}\}$, then an $\id$-automata is a function
+$$\alpha : S \to \{\text{accept}, \text{reject}\} \times S^I$$
+consisting of a function $\alpha_1 : S \to \{\text{accept}, \text{reject}\}$
+marking each state as either an accept state or a reject state, and a function
+$\alpha_2 : S \to S^I$ sending each state to its transition function that aways
+an input $i$ from the input alphabet $I$ and changes state. This is the
+classical notion of \emph{deterministic automaton}. If we let $M$ be the
+powerset monad, we get $\emph{non-deterministic}$ automata, and if $M$ is the
+monad of probability distributions we get $\emph{probabalistic}$ automata.
+
+
+In this section, we will show that there is a functor
+$$\text{endo} : \textbf{Lens}_{M} \to \textbf{End}(\Ca)$$
+given by 
+$$\text{endo}\lens{I}{O} := X \mapsto O \times MX^I.$$
+We will also show that 
+$$\textbf{Dyn}_{(-)} \simeq \textbf{Coalg} \circ \text{endo}$$
+the category of $\lens{I}{O}$-$M$-dynamical systems is naturally equivalent to the
+category of coalgebras for the endofunctor $X \mapsto O \times MX^I$. This gives
+us a presentation of the category of $M$-dynamical systems as $M$-automata.
+
+We begin by defining the action of the functor $\text{endo}$ on $M$-lenses.
+Given $\lens{f^{\sharp}}{f} : \lens{I}{O} \to \lens{I'}{O'}$, we will get a
+natural transformation $\text{endo}\lens{f^{\sharp}}{f}_X : O \times MX^I \to O'
+\times MX^{I'}$ consisting of two components:
+\begin{itemize}
+\item The first component $O \times MX^I \to O'$ sends $(o, u)$ to $f(o)$.
+$$O \times MX^I \xto{\pi_O} O \xto{f} O'.$$
+\item The second component $O \times MX^I \to MX^{I'}$ send $(o, u)$ to the
+  function $j \mapsto u(f^{\sharp}(o, j))$. This is the transpose of the
+  following composite:
+$$O \times I' \times MX^I \xto{f^{\sharp} \times MX^I} I \times MX^I
+\xto{\text{ev}} MX$$
+where $\text{ev} : I \times MX^I \to MX$ is the evalutation function, transpose
+to the identity $MX^I \to MX^I$.
+\end{itemize}
+
+\begin{prop}
+The assignment $\text{endo}: \textbf{Lens}_M \to \textbf{End}(\Ca)$ is a functor.
+\end{prop}
+\begin{proof}
+Identity lenses are clearly sent to the identity natural transformation. Now,
+suppose we have lenses
+\end{proof}
+
+
+
+
+\subsection{Example: Continuous Dynamical Systems}
+
+Consider the indexed category of submersions $\textbf{Mfd}
+\downarrow_{\textbf{Subm}} - : \textbf{Mfd}\op \to \Cat$, equipped with the
+section $\epsilon M := TM \to M$ assigning each manifold its tangent bundle.
+
+\begin{defn}
+A \emph{continuous time dynamical system} is a $(\textbf{Mfd}
+\downarrow_{\textbf{Subm}} -, T)$-dynamical system. That is, a continuous time
+dynamical system consists of:
+\begin{itemize}
+\item A manifold $S$ of \emph{states}.
+\item A manifold $O$ of \emph{outputs}.
+\item A submersion $i : I \to O$ which we think of as assigning each output $o \in
+  O$ to the space $I_o := i\inv(o)$ of inputs the system can receive given the
+  output $o$.
+\item A $(\textbf{Mfd}
+\downarrow_{\textbf{Subm}} -)$-lens $\lens{u}{r} : \lens{TS}{S} \to \lens{I}{O}$
+consisting of:
+\begin{itemize}
+\item a smooth \emph{readout} function $r : S \to O$, and
+  \item a smooth \emph{update} function $u : S \otimes_O I \to TS$ over $S$,
+    sending a state $s$ and an input $i \in I_{r(s)}$ to a vector $u(s, i)$
+    tangent to $s$ saying where the system should transition to next. 
+\end{itemize}
+\end{itemize}
+
+\end{defn}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

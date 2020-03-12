@@ -1,0 +1,242 @@
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz}
+\usepackage{wrapfig} % For inserting graphics
+\usepackage{graphicx} % For inserting graphics
+\usepackage{tikz-cd}
+\usepackage[margin=1in]{geometry} % To shape the margins
+\usepackage[backend=biber]{biblatex}
+\usepackage{tipa} % For \textesh, the shape modality
+\usepackage{mathtools} % for pre-superscripts
+\usepackage{caption}
+\usepackage{thmtools, thm-restate} % for forward references
+
+\usetikzlibrary{decorations.pathreplacing} % for drawing coverings.
+
+\newlength{\perspective} %% For drawing cubes
+
+\graphicspath{graphics/}
+
+%%% Mathcal
+\DeclareMathOperator{\Aa}{\mathcal{A}}
+\DeclareMathOperator{\Ba}{\mathcal{B}}
+\DeclareMathOperator{\Ca}{\mathcal{C}}
+\DeclareMathOperator{\Da}{\mathcal{D}}
+\DeclareMathOperator{\Ea}{\mathcal{E}}
+\DeclareMathOperator{\Fa}{\mathcal{F}}
+\DeclareMathOperator{\Ga}{\mathcal{G}}
+\DeclareMathOperator{\Ha}{\mathcal{H}}
+\DeclareMathOperator{\Ka}{\mathcal{K}}
+\DeclareMathOperator{\La}{\mathcal{L}}
+\DeclareMathOperator{\Ma}{\mathcal{M}}
+\DeclareMathOperator{\Na}{\mathcal{N}}
+\DeclareMathOperator{\Oa}{\mathcal{O}}
+\DeclareMathOperator{\Pa}{\mathcal{P}}
+\DeclareMathOperator{\Qa}{\mathcal{Q}}
+\DeclareMathOperator{\Ra}{\mathcal{R}}
+\DeclareMathOperator{\Sa}{\mathcal{S}}
+\DeclareMathOperator{\Ta}{\mathcal{T}}
+\DeclareMathOperator{\Ua}{\mathcal{U}}
+\DeclareMathOperator{\Va}{\mathcal{V}}
+\DeclareMathOperator{\Wa}{\mathcal{W}}
+\DeclareMathOperator{\Xa}{\mathcal{X}}
+\DeclareMathOperator{\Ya}{\mathcal{Y}}
+\DeclareMathOperator{\Za}{\mathcal{Z}}
+
+%%% Mathbb
+\DeclareMathOperator{\Ab}{\mathbb{A}}
+\DeclareMathOperator{\Bb}{\mathbb{B}}
+\DeclareMathOperator{\Cb}{\mathbb{C}}
+\DeclareMathOperator{\Db}{\mathbb{D}}
+\DeclareMathOperator{\Eb}{\mathbb{E}}
+\DeclareMathOperator{\Fb}{\mathbb{F}}
+\DeclareMathOperator{\Gb}{\mathbb{G}}
+\DeclareMathOperator{\Hb}{\mathbb{H}}
+\DeclareMathOperator{\Kb}{\mathbb{K}}
+\DeclareMathOperator{\Lb}{\mathbb{L}}
+\DeclareMathOperator{\Mb}{\mathbb{M}}
+\DeclareMathOperator{\Nb}{\mathbb{N}}
+\DeclareMathOperator{\Ob}{\mathbb{O}}
+\DeclareMathOperator{\Pb}{\mathbb{P}}
+\DeclareMathOperator{\Qb}{\mathbb{Q}}
+\DeclareMathOperator{\Rb}{\mathbb{R}}
+\DeclareMathOperator{\Sb}{\mathbb{S}}
+\DeclareMathOperator{\Tb}{\mathbb{T}}
+\DeclareMathOperator{\Ub}{\mathbb{U}}
+\DeclareMathOperator{\Vb}{\mathbb{V}}
+\DeclareMathOperator{\Wb}{\mathbb{W}}
+\DeclareMathOperator{\Xb}{\mathbb{X}}
+\DeclareMathOperator{\Yb}{\mathbb{Y}}
+\DeclareMathOperator{\Zb}{\mathbb{Z}}
+
+\DeclareMathOperator{\pc}{\mathfrak{p}}
+\DeclareMathOperator{\Ic}{\mathfrak{I}}
+
+%%% Operators -- Algebra
+\DeclareMathOperator{\im}{\mathsf{im}}
+\DeclareMathOperator{\Hom}{\mathsf{Hom}}
+\DeclareMathOperator{\Spec}{\mathsf{Spec}}
+\DeclareMathOperator{\Gr}{\mathsf{Gr}}
+\DeclareMathOperator{\join}{\vee}
+\DeclareMathOperator{\meet}{\wedge}
+
+%%% Operators -- Categorical
+\DeclareMathOperator{\op}{^\text{op}}
+\DeclareMathOperator{\inv}{^{-1}}
+\DeclareMathOperator{\id}{\mathsf{id}}
+\renewcommand{\ker}{\mathsf{ker}}
+\DeclareMathOperator{\coker}{\mathsf{coker}}
+\DeclareMathOperator{\Aut}{\mathsf{Aut}}
+\DeclareMathOperator{\BAut}{\mathsf{BAut}}
+\DeclareMathOperator{\Map}{\mathsf{Map}}
+\DeclareMathOperator{\Gal}{\mathsf{Gal}}
+\DeclareMathOperator{\colim}{\mathsf{colim}}
+\DeclareMathOperator{\End}{\mathsf{End}}
+
+%%% Operators -- Type Theory
+\DeclareMathOperator{\ev}{\textbf{ev}}
+\DeclareMathOperator{\Prop}{\textbf{Prop}}
+\DeclareMathOperator{\Type}{\textbf{Type}}
+\DeclareMathOperator{\precomp}{^{\ast}}
+\DeclareMathOperator{\postcomp}{_{\ast}}
+\DeclareMathOperator{\refl}{\mathsf{refl}}
+\DeclareMathOperator{\fib}{\mathsf{fib}}
+\DeclareMathOperator{\cofib}{\type{cofib}}
+\DeclareMathOperator{\Zero}{\textbf{0}}
+\DeclareMathOperator{\One}{\textbf{1}}
+\DeclareMathOperator{\fst}{\term{fst}}
+\DeclareMathOperator{\snd}{\term{snd}}
+\DeclareMathOperator{\base}{\term{base}}
+\DeclareMathOperator{\funext}{\term{funext}}
+\DeclareMathOperator{\tr}{\term{tr}}
+\DeclareMathOperator{\ap}{\term{ap}}
+\DeclareMathOperator{\at}{\term{\, at\,}}
+\DeclareMathOperator{\glue}{\term{glue}}
+\DeclareMathOperator{\inl}{\term{inl}}
+\DeclareMathOperator{\inr}{\term{inr}}
+\DeclareMathOperator{\esh}{\text{\textesh}}
+\let\bang\relax % aaahhhhh
+\DeclareMathOperator{\bang}{!}
+\DeclareMathOperator{\defin}{\term{-def}}
+\DeclareMathOperator{\Bool}{\textbf{Bool}}
+\newcommand{\sslash}{\mathbin{/\mkern-6mu/}} % double slash for homotopy quotients
+
+%%% Categories
+\DeclareMathOperator{\Set}{\textbf{Set}}
+\DeclareMathOperator{\Top}{\textbf{Top}}
+\DeclareMathOperator{\Grph}{\textbf{Grph}}
+\DeclareMathOperator{\AbCat}{\textbf{Ab}}
+\DeclareMathOperator{\Cat}{\textbf{Cat}}
+\DeclareMathOperator{\Vect}{\textbf{Vect}}
+\DeclareMathOperator{\Ring}{\textbf{Ring}}
+\DeclareMathOperator{\Mod}{\textbf{Mod}}
+\DeclareMathOperator{\Alg}{\textbf{Alg}}
+\DeclareMathOperator{\Aff}{\textbf{Aff}}
+\DeclareMathOperator{\SqFree}{\textbf{SqFree}}
+\DeclareMathOperator{\SQC}{\Alg_{\textbf{SQC}}}
+
+
+%%% Commands -- Category Theory
+\newcommand{\wlim}[1]{\lim\nolimits_{#1}\!}
+\newcommand{\wcolim}[1]{\text{colim}_{#1}}
+
+%Yoneda
+\font\maljapanese=dmjhira at 2ex % you can change this "2ex" value
+\def\yo{\textrm{\maljapanese\char"48}\!}
+
+%%% Commands -- Type Theory
+\newcommand{\lam}[1]{\lambda {#1}.\,}       % \lam{x : X} Y
+\newcommand{\dprod}[1]{({#1}) \to }           %  \dprod{x : X} Y(x)
+\newcommand{\dsum}[1]{({#1}) \times }       % \dsum{x : X} Y(x)
+\newcommand{\type}[1]{\mathsf{{#1}}}
+\newcommand{\term}[1]{\mathsf{{#1}}}
+\newcommand{\ax}[1]{\mathsf{{#1}}}
+\newcommand{\trunc}[1]{\left\lVert#1\right\rVert}       % truncation
+\newcommand{\ph}{\vphantom{)}} % For iterated upper and lower modalities
+\newcommand{\BB}{\term{B}}
+\newcommand{\pt}{\term{pt}}
+
+%%% Commands -- Autobots
+\newcommand{\prism}{\mathsf{Prism}}
+\newcommand{\ob}{\mathsf{ob}}
+\newcommand{\Finset}{\mathsf{Finset}}
+\newcommand{\TFS}{\mathsf{TFS}}
+\newcommand{\Lens}{\mathsf{Lens}}
+\newcommand{\LLens}{\mathsf{LawLens}}
+\newcommand{\SLens}{\mathsf{SimpLens}}
+\newcommand{\Dyn}{\mathsf{Dyn}}
+\newcommand{\lens}[2]{\begin{pmatrix}{#1} \\ {#2} \end{pmatrix}}
+
+
+
+%%% Commands -- Arrows and Equals
+\newcommand{\xto}[1]{\xrightarrow{#1}}
+\newcommand{\todot}{\xrightarrow{\bullet}}
+\newcommand{\pto}{\,\cdot\kern-.1em{\to}\,}
+
+% xmapsto
+\makeatletter
+\providecommand*{\xmapstofill@}{%
+  \arrowfill@{\mapstochar\relbar}\relbar\rightarrow
+}
+\providecommand*{\xmapsto}[2][]{%
+  \ext@arrow 0395\xmapstofill@{#1}{#2}%
+}
+
+% xequals
+\newcommand{\xequals}[1]{\overset{{#1}}{=\joinrel=}}
+\newcommand{\equalsdot}{\xequals{\bullet}}
+
+% Proarrows
+\makeatletter
+\def\slashedarrowfill@#1#2#3#4#5{%
+  $\m@th\thickmuskip0mu\medmuskip\thickmuskip\thinmuskip\thickmuskip
+   \relax#5#1\mkern-7mu%
+   \cleaders\hbox{$#5\mkern-2mu#2\mkern-2mu$}\hfill
+   \mathclap{#3}\mathclap{#2}%
+   \cleaders\hbox{$#5\mkern-2mu#2\mkern-2mu$}\hfill
+   \mkern-7mu#4$%
+}
+\def\rightslashedarrowfill@{%
+  \slashedarrowfill@\relbar\relbar\mapstochar\rightarrow}
+\newcommand\xslashedrightarrow[2][]{%
+  \ext@arrow 0055{\rightslashedarrowfill@}{#1}{#2}}
+\makeatother
+
+\newcommand{\xtopro}[1]{\xslashedrightarrow{#1}} % Proarrows
+\newcommand{\topro}{\xslashedrightarrow{}}
+
+\tikzset{
+    vert/.style={anchor=south, rotate=90, inner sep=.5mm}
+} % For vertical \sim in tikzcd, use "\sim" vert
+
+%% Corner quotes
+\newcommand{\internal}[1]{\ulcorner{#1}\urcorner}
+
+
+\newtheorem{thm}{Theorem}[section]
+
+%%% Theorem Environments
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{tentative}[thm]{Tentative Definition}
+\newtheorem{principle}{Principle}
+\newtheorem{question}{Question}
+\newtheorem{ex}{Example}
+\newtheorem{axiom}{Axiom}
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem{rmk}[thm]{Remark}
+\newtheorem*{solution}{Solution}
+\newtheorem*{acknowledgements}{Acknowledgements}
+
+
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{notation}{Notation}
+\newtheorem*{claim}{Claim}
+\newtheorem*{fclaim}{False Claim}
+\newtheorem{obs}[thm]{Observation}
+\newtheorem{conjecture}[thm]{Conjecture}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{con}[thm]{Construction}
